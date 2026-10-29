@@ -17,7 +17,7 @@ h2{margin:0 0 14px;font-size:19px;letter-spacing:-.3px}h3{font-size:15px;margin-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .metric{background:#191714;border:1px solid var(--border);border-top:3px solid #806640;border-radius:10px;padding:18px}.metric span{font-size:12px}.metric strong{display:block;margin-top:6px;font-size:30px;letter-spacing:-1px;color:#f3d8ad}
 #metrics .metric:nth-child(3){border-top-color:#c5a474}#metrics .metric:nth-child(5){border-top-color:#c88062}
-label{display:block;font-weight:700;margin-bottom:6px}input,select,button{font:inherit}input[type=date],select{padding:9px 11px;border:1px solid #65543d;border-radius:8px;background:#191714;color:#f2eee7}
+label{display:block;font-weight:700;margin-bottom:6px}input,select,button{font:inherit}input[type=date],input[type=number],select{padding:9px 11px;border:1px solid #65543d;border-radius:8px;background:#191714;color:#f2eee7}
 button{padding:10px 14px;border:1px solid transparent;border-radius:8px;background:var(--gold);color:#17120b;font-weight:700;cursor:pointer;transition:background .15s}button:hover{filter:brightness(1.1)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#26211b;border-color:#65543d;color:#ead6b9}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d5a5;outline-offset:3px}
 .controls{display:flex;gap:14px;flex-wrap:wrap;align-items:end}
 .upload{padding:20px;border:1px dashed #826c4c;background:#191714;border-radius:12px}.upload label{font-size:14px;color:#e8d1ae}.upload small{display:block;margin-top:9px}
@@ -42,7 +42,7 @@ h3{color:#2d4b68}.muted,small{color:var(--muted)}
 #metrics .metric:nth-child(4),#metrics .metric:nth-child(7){background:#fffaed;border-color:#f3e7c4;border-top-color:#d6a03c}#metrics .metric:nth-child(4) strong,#metrics .metric:nth-child(7) strong{color:#8a641a}
 #metrics .metric:nth-child(5),#metrics .metric:nth-child(8){background:#fff3f0;border-color:#f2ddd5;border-top-color:#d47d66}#metrics .metric:nth-child(5) strong,#metrics .metric:nth-child(8) strong{color:#a84f3c}
 #metrics .metric:nth-child(6){background:#eef9f4;border-color:#d6eee1;border-top-color:#26956c}#metrics .metric:nth-child(6) strong{color:#19764f}
-input[type=date],select{background:#fff;color:#21354b;border-color:#b9cad9}
+input[type=date],input[type=number],select{background:#fff;color:#21354b;border-color:#b9cad9}
 button{background:#286cae;color:#fff}button.secondary{background:#eef4fa;border-color:#cfdeeb;color:#345773}
 button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#2874b8}
 .upload{background:#f6faff;border-color:#8bb1d7}.upload label{color:#294f76}
@@ -52,6 +52,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 .chart-track{background:#edf2f7}.chart-fill{background:#2d9b77}.chart-row:nth-child(2) .chart-fill{background:#dda842}.chart-row:nth-child(3) .chart-fill{background:#d47d66}.chart-row:nth-child(4) .chart-fill{background:#91a4b7}.chart-row strong{color:#345773}
 .empty-guide{background:#eef6ff;color:#365b7d;border-left-color:#4d8cc8}
 .report-nav{background:#fff}.report-nav label{color:#5c7185}.report-nav select{color:#2c5276}
+.manual-backorders{margin-top:14px}.manual-backorders label{font-size:12px}.manual-backorders input{width:100%;max-width:140px;margin-bottom:8px}.manual-backorders button{padding:8px 10px;font-size:12px}.manual-backorders small{display:block;margin-top:8px}.manual-backorders output{font-weight:700}
 </style>
 </head>
 <body>
@@ -128,7 +129,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
   <div id="turnaroundChart" aria-label="Packing turnaround breakdown"></div>
   <h3>SO vs. TR — Packing Turnaround</h3>
   <div class="scroll"><table><thead><tr><th>Report</th><th>Requests</th><th>Packed</th><th>0–24h %</th><th>25–48h %</th><th>Over 48h %</th><th>Missing FirstPackedOn</th><th>Packed / Requested %</th></tr></thead><tbody id="compare"></tbody></table></div>
-  <p class="muted">Packing-speed percentages are based on valid FirstPackedOn timestamps only. The Packed / Requested % uses all requests, is not adjusted for backorders, and is shown separately. OpsActivityLog may reveal partial packing activity, but that does not establish full completion or prove material shortage.</p>
+  <p class="muted">Packing-speed percentages are based on valid FirstPackedOn timestamps only. The overview cards exclude manually reported backorders from requested and unpacked counts and the packed/requested completion percentage. Detailed tables retain the original request counts because a manual total does not identify individual orders or their dates. OpsActivityLog may reveal partial packing activity, but that does not establish full completion or prove material shortage.</p>
 </section>
 
 <section id="daily-tab" class="panel view-section" data-view="daily">
@@ -286,7 +287,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 
 <script>
 const KEY='warehouse_dashboard_v2';
-let db={SO:{},TR:{},delay:[],activity:{},qc:{}};
+let db={SO:{},TR:{},delay:[],activity:{},qc:{},manualBackorders:{}};
 try{
   let old=JSON.parse(localStorage.getItem(KEY));
   if(old && old.SO && old.TR) db={...db,...old,activity:old.activity||{},qc:old.qc||{}};
@@ -449,8 +450,50 @@ function summary(rows){
     missing:rows.length-packedRows.length
   };
 }
-function metric(name,val){
-  return `<div class="metric"><span class="muted">${name}</span><strong>${val}</strong></div>`;
+function metric(name,val,id=''){
+  return `<div class="metric"><span class="muted">${name}</span><strong${id?` id="${id}"`:""}>${val}</strong></div>`;
+}
+function backorderKey(){
+  return JSON.stringify([$('from').value,$('to').value,$('type').value]);
+}
+function requestedMetric(total,key,packedCount=0){
+  const count=db.manualBackorders?.[key];
+  const entered=Number.isSafeInteger(count) && count>=0;
+  const valid=entered && count<=total-packedCount;
+  return `<div class="metric"><span class="muted">Requested excluding backorders</span><strong id="adjustedRequested">${entered&&!valid?'—':fmt(total-(valid?count:0))}</strong>
+    <small>Total requested: ${fmt(total)}</small>
+    <form id="backorderForm" class="manual-backorders">
+      <label for="manualBackorders">Backordered (manual)</label>
+      <input id="manualBackorders" type="number" min="0" max="${total-packedCount}" step="1" value="${entered?count:''}" placeholder="Enter count" aria-describedby="backorderHelp" required>
+      <button type="submit" class="secondary">Save count</button>
+      <small><output id="backorderSavedState">${entered?'Manual count saved':'No backorders entered yet'}</output></small>
+      <small id="backorderHelp">Count orders, not lines or units. Saved for this date range and request type only. Backorders are excluded from the overall unpacked count and completion percentage; timed packing percentages are unchanged.${entered&&!valid?' Saved count exceeds current unpacked requests; update it.':''}</small>
+    </form></div>`;
+}
+function saveManualBackorders(event,key,total,packedCount=0){
+  event.preventDefault();
+  const input=$('manualBackorders');
+  input.setCustomValidity('');
+  const count=input.valueAsNumber;
+  if(input.value.trim()==='' || !Number.isSafeInteger(count) || count<0 || count>total-packedCount){
+    input.setCustomValidity('Enter a whole number between 0 and '+(total-packedCount)+' (the unpacked count).');
+    input.reportValidity();
+    return;
+  }
+  db.manualBackorders??={};
+  const previous=db.manualBackorders[key];
+  db.manualBackorders[key]=count;
+  if(!save()){
+    if(previous===undefined) delete db.manualBackorders[key];
+    else db.manualBackorders[key]=previous;
+    return;
+  }
+  $('adjustedRequested').textContent=fmt(total-count);
+  $('adjustedUnpacked').textContent=fmt(total-packedCount-count);
+  $('adjustedPackedRatio').textContent=pct(packedCount,total-count);
+  $('backorderSavedState').textContent='Manual count saved';
+  $('backorderHelp').textContent='Count orders, not lines or units. Saved for this date range and request type only. Backorders are excluded from the overall unpacked count and completion percentage; timed packing percentages are unchanged.';
+  $('status').textContent='Manual backorder count saved for the displayed date range and request type.';
 }
 function grouped(rows,key){
   let g={};
@@ -473,8 +516,12 @@ function render(){
   $('emptyGuide').hidden=rows.length>0;
   $('emptyGuide').textContent=Object.keys(db.SO).length+Object.keys(db.TR).length ? 'No requests match this reporting period. Adjust the dates or request type.' : 'Start with a Requested SO or Requested TR Excel report above. Your performance summary will appear here.';
   $('turnaroundChart').innerHTML=[['Within 24 hours',s.h24],['24–48 hours',s.b2548],['Over 48 hours',s.gt48],['Missing / invalid',s.missing]].map(([label,count])=>`<div class="chart-row"><span>${label}</span><div class="chart-track"><div class="chart-fill" style="width:${s.total?100*count/s.total:0}%"></div></div><strong>${fmt(count)}</strong></div>`).join('');
+  const manualKey=backorderKey();
+  const backorders=db.manualBackorders?.[manualKey]??0;
+  const validBackorders=Number.isSafeInteger(backorders) && backorders>=0 && backorders<=s.missing;
+  const adjustedTotal=s.total-backorders;
   $('metrics').innerHTML =
-    metric('Total requested',fmt(s.total)) +
+    requestedMetric(s.total,manualKey,s.packed) +
     metric('Packed with FirstPackedOn',fmt(s.packed)) +
     metric('0–24h %',pct(s.h24,s.packed)) +
     metric('25–48h %',pct(s.b2548,s.packed)) +
@@ -482,8 +529,10 @@ function render(){
     metric('0–24h count',fmt(s.h24)) +
     metric('25–48h count',fmt(s.b2548)) +
     metric('Over 48h count',fmt(s.gt48)) +
-    metric('Missing FirstPackedOn',fmt(s.missing)) +
-    metric('Packed / Requested %',pct(s.packed,s.total));
+    metric('Unpacked excluding backorders',validBackorders?fmt(s.missing-backorders):'—','adjustedUnpacked') +
+    metric('Packed / Adjusted requested %',validBackorders?pct(s.packed,adjustedTotal):'—','adjustedPackedRatio');
+  $('backorderForm').onsubmit=event=>saveManualBackorders(event,manualKey,s.total,s.packed);
+  $('manualBackorders').oninput=()=> $('manualBackorders').setCustomValidity('');
   table('compare', [['SO',rows.filter(r=>r.type==='SO')],['TR',rows.filter(r=>r.type==='TR')],['Combined',rows]],([name,rr])=>{
     const z=summary(rr);
     return `<tr><td><strong>${name}</strong></td><td>${fmt(z.total)}</td><td>${fmt(z.packed)}</td><td>${pct(z.h24,z.packed)}</td><td>${pct(z.b2548,z.packed)}</td><td>${pct(z.gt48,z.packed)}</td><td>${fmt(z.missing)}</td><td>${pct(z.packed,z.total)}</td></tr>`;
@@ -711,7 +760,7 @@ $('apply').onclick=()=>{
 };
 $('clear').onclick=()=>{
   if(confirm('Delete all saved warehouse data from this browser?')){
-    db={SO:{},TR:{},delay:[],activity:{},qc:{}};
+    db={SO:{},TR:{},delay:[],activity:{},qc:{},manualBackorders:{}};
     save();
     render();
     $('status').textContent='Saved data cleared.';
