@@ -52,6 +52,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 #status,#activityStatus{background:#eef8f5;color:#286d5a}
 .empty-guide{background:#eef6ff;color:#365b7d;border-left-color:#4d8cc8}
 .report-nav{background:#fff}.report-nav label{color:#5c7185}.report-nav select{color:#2c5276}
+.daily-chart-card{margin:20px 0 24px;padding:20px;border:1px solid #dce7ef;border-radius:12px;background:linear-gradient(180deg,#f7fbff,#fff)}.daily-chart-heading{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}.daily-chart-heading h3{margin:0;color:#294f76}.daily-chart-heading small{font-size:12px}.daily-chart-legend{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0;font-size:12px;color:#41617c}.daily-chart-legend span{display:inline-flex;gap:7px;align-items:center}.daily-chart-legend i{width:10px;height:10px;border-radius:3px}.daily-chart-scroll{overflow-x:auto;padding:6px 2px}.daily-columns{display:flex;gap:12px;min-width:100%;width:max-content;align-items:stretch;background:repeating-linear-gradient(to top,transparent 0,transparent 59px,#e7eff6 60px,#e7eff6 61px);border-bottom:1px solid #cbdbe8}.daily-column{flex:1 0 72px;min-width:72px;max-width:140px;background:transparent;color:#345773;border:1px solid transparent;border-radius:8px 8px 0 0;padding:8px 10px 0;display:flex;flex-direction:column;align-items:center;font-weight:400}.daily-column[aria-pressed=true]{background:#eaf3ff;border-color:#8eb6df}.daily-column:hover{background:#eef5fc}.daily-column strong{font-size:13px;color:#294f76;margin-bottom:8px}.daily-stack-area{height:220px;display:flex;align-items:flex-end;width:100%;justify-content:center}.daily-stack{display:flex;flex-direction:column-reverse;width:100%;max-width:54px;min-height:2px;overflow:hidden;border-radius:6px 6px 0 0}.daily-segment{display:block;flex-shrink:0}.daily-day{font-size:12px;font-weight:700;margin-top:12px}.daily-date{font-size:11px;margin:4px 0 12px;white-space:nowrap}.daily-chart-detail{font-size:13px;line-height:1.7;padding:12px 14px;background:#edf5fc;border-radius:8px;margin:14px 0 0;color:#345773}.daily-chart-empty{padding:36px 12px;text-align:center;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -133,6 +134,18 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 
 <section id="daily-tab" class="panel view-section" data-view="daily">
   <h2>Daily performance</h2>
+  <div class="daily-chart-card">
+    <div class="daily-chart-heading"><h3>Every day, at a glance</h3><small>Request counts by requested date · select a day for details</small></div>
+    <div class="daily-chart-legend" aria-label="Daily chart legend">
+      <span><i style="background:#2d9b77" aria-hidden="true"></i>Within 24h</span>
+      <span><i style="background:#dda842" aria-hidden="true"></i>24–48h</span>
+      <span><i style="background:#d47d66" aria-hidden="true"></i>Over 48h</span>
+      <span><i style="background:#91a4b7" aria-hidden="true"></i>Missing / invalid</span>
+    </div>
+    <div id="dailyChart"></div>
+    <p id="dailyChartDetail" class="daily-chart-detail" role="status" aria-live="polite"></p>
+  </div>
+  <h3>Daily breakdown</h3>
   <div class="scroll">
     <table>
       <thead>
@@ -496,6 +509,37 @@ function renderTurnaround(s){
     </div>
   </div>`;
 }
+function renderDailyChart(rows){
+  const days=grouped(rows,x=>iso(new Date(x.requested))).map(([date,items])=>({date,...summary(items)}));
+  if(!days.length){
+    $('dailyChart').innerHTML='<div class="daily-chart-empty">No requests for this period. Import a report or adjust the reporting dates.</div>';
+    $('dailyChartDetail').textContent='Daily totals will appear here when requests are available.';
+    return;
+  }
+  const maximum=Math.max(...days.map(day=>day.total));
+  $('dailyChart').innerHTML=`<div class="daily-chart-scroll" tabindex="0" role="region" aria-label="Daily request counts, scroll horizontally for more days"><div class="daily-columns" style="width:max(100%, ${days.length*84}px)">
+    ${days.map((day,index)=>{
+      const date=new Date(day.date+'T12:00:00');
+      const label=date.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
+      return `<button type="button" class="daily-column" data-day="${index}" aria-pressed="false" aria-label="${label}: ${fmt(day.total)} requested, ${fmt(day.packed)} packed. Show details." title="${label}: ${fmt(day.total)} requests">
+        <strong>${fmt(day.total)}</strong>
+        <span class="daily-stack-area" aria-hidden="true"><span class="daily-stack" style="height:${220*day.total/maximum}px">
+          ${[[day.h24,'#2d9b77'],[day.b2548,'#dda842'],[day.gt48,'#d47d66'],[day.missing,'#91a4b7']].map(([count,color])=>`<span class="daily-segment" style="height:${100*count/day.total}%;background:${color}"></span>`).join('')}
+        </span></span>
+        <span class="daily-day">${date.toLocaleDateString('en-US',{weekday:'short'})}</span><span class="daily-date">${date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
+      </button>`;
+    }).join('')}
+  </div></div>`;
+  $('dailyChartDetail').textContent='Bar height shows total requests. Colors show packing turnaround; gray marks missing or invalid timestamps. Select a day to see its results.';
+  $('dailyChart').querySelectorAll('.daily-column').forEach(button=>{
+    button.onclick=()=>{
+      $('dailyChart').querySelectorAll('.daily-column').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+      const day=days[Number(button.dataset.day)];
+      const date=new Date(day.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
+      $('dailyChartDetail').textContent=`${date} — ${fmt(day.total)} requested · ${fmt(day.packed)} packed · Within 24h: ${fmt(day.h24)} (${pct(day.h24,day.packed)}) · 24–48h: ${fmt(day.b2548)} (${pct(day.b2548,day.packed)}) · Over 48h: ${fmt(day.gt48)} (${pct(day.gt48,day.packed)}) · Missing / invalid: ${fmt(day.missing)}. Percentages use packed requests, matching the table.`;
+    };
+  });
+}
 function render(){
   let rows=rowsFiltered(), s=summary(rows);
   $('emptyGuide').hidden=rows.length>0;
@@ -517,6 +561,7 @@ function render(){
     return `<tr><td><strong>${name}</strong></td><td>${fmt(z.total)}</td><td>${fmt(z.packed)}</td><td>${pct(z.h24,z.packed)}</td><td>${pct(z.b2548,z.packed)}</td><td>${pct(z.gt48,z.packed)}</td><td>${fmt(z.missing)}</td><td>${pct(z.packed,z.total)}</td></tr>`;
   },8);
 
+  renderDailyChart(rows);
   table('daily', grouped(rows,x=>iso(new Date(x.requested))), ([date,rr])=>{
     let z=summary(rr);
     return `<tr>
