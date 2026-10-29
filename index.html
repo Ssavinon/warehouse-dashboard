@@ -24,7 +24,7 @@ button{padding:10px 14px;border:1px solid transparent;border-radius:8px;backgrou
 input[type=file]{max-width:100%;font-size:13px;color:#cbbca6}input::file-selector-button{border:1px solid #806640;border-radius:6px;background:#352b1e;color:#f0d2a4;padding:9px 12px;margin-right:10px;font-weight:600;cursor:pointer}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:11px;border-bottom:1px solid #302b24;text-align:left}th{background:#211c15;position:sticky;top:0;font-size:11px;letter-spacing:.3px;color:#dac39f;white-space:nowrap}td{font-size:13px;color:#e4ddd2}tbody tr:hover{background:#211c15}.scroll{overflow:auto;max-height:340px;border:1px solid var(--border);border-radius:10px;margin-top:14px}
 #status,#activityStatus{font-size:13px;background:#221d15;color:#ddc7a5;border-radius:8px;padding:12px;white-space:pre-line}#activityStatus:empty{display:none}
-.turnaround-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;align-items:center;margin:24px 0}.turnaround-donut{width:240px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center}.turnaround-center{width:68%;aspect-ratio:1;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.turnaround-center strong{font-size:32px;letter-spacing:-1px;color:#244b78}.turnaround-center span{font-size:12px;color:#5b6c7e;margin-top:4px}.turnaround-legend{list-style:none;margin:0;padding:0}.turnaround-legend li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 58px;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);font-size:13px}.turnaround-legend li:last-child{border-bottom:0}.turnaround-swatch{width:12px;height:12px;border-radius:50%}.turnaround-legend strong,.turnaround-share{text-align:right;font-variant-numeric:tabular-nums}.turnaround-share{color:var(--muted)}
+.turnaround-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;align-items:center;margin:24px 0}.turnaround-donut{width:240px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center}.turnaround-center{width:68%;aspect-ratio:1;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.turnaround-center strong{font-size:32px;letter-spacing:-1px;color:#244b78}.turnaround-center span{font-size:12px;color:#5b6c7e;margin-top:4px}.turnaround-legend{list-style:none;margin:0;padding:0}.turnaround-legend li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 58px;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);font-size:13px}.turnaround-legend li:last-child{border-bottom:0}.turnaround-swatch{width:12px;height:12px;border-radius:50%}.turnaround-legend strong,.turnaround-share{text-align:right;font-variant-numeric:tabular-nums}.turnaround-share{color:var(--muted)}.turnaround-missing{font-size:12px;margin:14px 0 0}
 @media(max-width:600px){.turnaround-layout{grid-template-columns:minmax(0,1fr);gap:16px}.turnaround-donut{width:210px;justify-self:center}.turnaround-legend li{gap:8px;grid-template-columns:10px minmax(0,1fr) auto 52px}}
 .empty-guide{padding:16px;border-left:3px solid var(--gold);background:#211c15;font-size:14px;color:#ddc7a5;margin:16px 0}
 .view-section{display:none}.view-section.visible{display:block}
@@ -124,7 +124,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
   <div id="emptyGuide" class="empty-guide">Start with a Requested SO or Requested TR Excel report above. Your performance summary will appear here.</div>
   <div class="grid" id="metrics"></div>
   <h3>Packing turnaround at a glance</h3>
-  <p class="muted">Share of all requests in the selected reporting period. Missing or invalid packing timestamps are shown separately.</p>
+  <p class="muted">Share of packed requests with valid timestamps, matching the percentages above. Missing or invalid packing timestamps are excluded from the circle and shown separately.</p>
   <div id="turnaroundChart" aria-label="Packing turnaround breakdown"></div>
   <h3>SO vs. TR — Packing Turnaround</h3>
   <div class="scroll"><table><thead><tr><th>Report</th><th>Requests</th><th>Packed</th><th>0–24h %</th><th>25–48h %</th><th>Over 48h %</th><th>Missing FirstPackedOn</th><th>Packed / Requested %</th></tr></thead><tbody id="compare"></tbody></table></div>
@@ -472,26 +472,28 @@ function renderTurnaround(s){
   const categories=[
     ['Within 24 hours',s.h24,'#2d9b77'],
     ['24–48 hours',s.b2548,'#dda842'],
-    ['Over 48 hours',s.gt48,'#d47d66'],
-    ['Missing / invalid',s.missing,'#91a4b7']
+    ['Over 48 hours',s.gt48,'#d47d66']
   ];
   let end=0;
   const stops=categories.map(([,count,color])=>{
     const start=end;
-    end+=s.total?100*count/s.total:0;
+    end+=s.packed?100*count/s.packed:0;
     return `${color} ${start}% ${end}%`;
   });
-  const background=s.total?`conic-gradient(${stops.join(',')})`:'#edf2f7';
-  const description=s.total
-    ? 'Packing turnaround, '+fmt(s.total)+' requests. '+categories.map(([label,count])=>`${label}: ${fmt(count)} (${pct(count,s.total)})`).join('. ')
-    : 'No requests in the selected reporting period.';
+  const background=s.packed?`conic-gradient(${stops.join(',')})`:'#edf2f7';
+  const description=s.packed
+    ? 'Packing turnaround, '+fmt(s.packed)+' packed requests with valid timestamps. '+categories.map(([label,count])=>`${label}: ${fmt(count)} (${pct(count,s.packed)})`).join('. ')
+    : 'No packed requests with valid timestamps in the selected reporting period.';
   $('turnaroundChart').innerHTML=`<div class="turnaround-layout">
     <div class="turnaround-donut" role="img" aria-label="${description}" style="background:${background}">
-      <div class="turnaround-center" aria-hidden="true"><strong>${fmt(s.total)}</strong><span>${s.total?'Total requests':'No requests yet'}</span></div>
+      <div class="turnaround-center" aria-hidden="true"><strong>${fmt(s.packed)}</strong><span>${s.packed?'Packed requests':'No packed requests'}</span></div>
     </div>
-    <ul class="turnaround-legend" aria-label="Packing turnaround counts and share of all requests">
-      ${categories.map(([label,count,color])=>`<li><span class="turnaround-swatch" style="background:${color}" aria-hidden="true"></span><span>${label}</span><strong>${fmt(count)}</strong><span class="turnaround-share">${pct(count,s.total)}</span></li>`).join('')}
-    </ul>
+    <div>
+      <ul class="turnaround-legend" aria-label="Packing turnaround counts and share of packed requests">
+        ${categories.map(([label,count,color])=>`<li><span class="turnaround-swatch" style="background:${color}" aria-hidden="true"></span><span>${label}</span><strong>${fmt(count)}</strong><span class="turnaround-share">${pct(count,s.packed)}</span></li>`).join('')}
+      </ul>
+      <p class="muted turnaround-missing">Missing / invalid timestamps: <strong>${fmt(s.missing)}</strong> of ${fmt(s.total)} total requests. Excluded from this circle.</p>
+    </div>
   </div>`;
 }
 function render(){
