@@ -54,6 +54,8 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 .report-nav{background:#fff}.report-nav label{color:#5c7185}.report-nav select{color:#2c5276}
 .daily-chart-card{margin:20px 0 24px;padding:20px;border:1px solid #dce7ef;border-radius:12px;background:linear-gradient(180deg,#f7fbff,#fff)}.daily-chart-heading{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}.daily-chart-heading h3{margin:0;color:#294f76}.daily-chart-heading small{font-size:12px}.daily-chart-legend{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0;font-size:12px;color:#41617c}.daily-chart-legend span{display:inline-flex;gap:7px;align-items:center}.daily-chart-legend i{width:10px;height:10px;border-radius:3px}.daily-chart-scroll{overflow-x:auto;padding:6px 2px}.daily-columns{display:flex;gap:12px;min-width:100%;width:max-content;align-items:stretch;background:repeating-linear-gradient(to top,transparent 0,transparent 59px,#e7eff6 60px,#e7eff6 61px);border-bottom:1px solid #cbdbe8}.daily-column{flex:1 0 72px;min-width:72px;max-width:140px;background:transparent;color:#345773;border:1px solid transparent;border-radius:8px 8px 0 0;padding:8px 10px 0;display:flex;flex-direction:column;align-items:center;font-weight:400}.daily-column[aria-pressed=true]{background:#eaf3ff;border-color:#8eb6df}.daily-column:hover{background:#eef5fc}.daily-column strong{font-size:13px;color:#294f76;margin-bottom:8px}.daily-stack-area{height:220px;display:flex;align-items:flex-end;width:100%;justify-content:center}.daily-stack{display:flex;flex-direction:column-reverse;width:100%;max-width:54px;min-height:2px;overflow:hidden;border-radius:6px 6px 0 0}.daily-segment{display:block;flex-shrink:0}.daily-day{font-size:12px;font-weight:700;margin-top:12px}.daily-date{font-size:11px;margin:4px 0 12px;white-space:nowrap}.daily-chart-detail{font-size:13px;line-height:1.7;padding:12px 14px;background:#edf5fc;border-radius:8px;margin:14px 0 0;color:#345773}.daily-chart-empty{padding:36px 12px;text-align:center;color:var(--muted)}
 .daily-chart-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:24px;align-items:start}.daily-chart-layout #dailyChart{min-width:0}.daily-chart-detail{margin:0;padding:20px;border:1px solid #d9e7f4;min-height:300px;background:#fff}.daily-chart-detail h4{font-size:16px;line-height:1.5;color:#294f76;margin:0 0 6px}.daily-detail-caption{font-size:12px;color:var(--muted);margin:0 0 14px}.daily-detail-totals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.daily-detail-totals div{background:#edf5fc;padding:12px;border-radius:8px}.daily-detail-totals span{font-size:11px;display:block;color:#53718a}.daily-detail-totals strong{font-size:23px;color:#244b78}.daily-detail-list{margin:0}.daily-detail-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;border-bottom:1px solid #e5edf4;padding:11px 0;font-size:12px}.daily-detail-row dt{display:flex;align-items:center;gap:7px}.daily-detail-row dd{margin:0;font-variant-numeric:tabular-nums}.daily-detail-dot{width:8px;height:8px;flex-shrink:0;border-radius:50%}.daily-detail-row dd:last-child{color:#5b6c7e}.daily-detail-note{font-size:11px;line-height:1.7;color:var(--muted);margin:14px 0 0}@media(max-width:850px){.daily-chart-layout{grid-template-columns:minmax(0,1fr)}.daily-chart-detail{min-height:0}}
+.daily-group-label{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;max-width:100%}.daily-detail-row{grid-template-columns:minmax(0,1fr) auto auto}.daily-chart-detail h4{overflow-wrap:anywhere}
+.packing-chart-controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}.packing-chart-controls button{font-size:12px;padding:8px 12px}.packing-chart-controls button[aria-pressed=true]{background:#286cae;border-color:#286cae;color:#fff}.packing-chart-explanation{font-size:12px;color:#536c83;margin:0 0 14px}.packing-review-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.packing-review{display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:#fff7f1;border:1px solid #eedbcf;border-radius:10px;padding:12px;min-width:0;color:#6b4a38;font-weight:400}.packing-review:nth-child(2){background:#f0f6ff;border-color:#d7e5f7;color:#345773}.packing-review span{font-size:11px}.packing-review strong{font-size:13px;line-height:1.5;margin:5px 0;overflow-wrap:anywhere}.packing-review small{font-size:11px;color:inherit}.daily-detail-row{gap:8px;grid-template-columns:minmax(0,1fr) auto auto}.daily-detail-row dt{min-width:0}.daily-chart-detail{padding:16px}@media(max-width:480px){.packing-review-strip{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -136,7 +138,7 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 <section id="daily-tab" class="panel view-section" data-view="daily">
   <h2>Daily performance</h2>
   <div class="daily-chart-card">
-    <div class="daily-chart-heading"><h3>Every day, at a glance</h3><small>Request counts by requested date · select a day for details</small></div>
+    <div class="daily-chart-heading"><h3>Every day, at a glance</h3><small>Grouped by requested date · select a day for details</small></div>
     <div class="daily-chart-legend" aria-label="Daily chart legend">
       <span><i style="background:#2d9b77" aria-hidden="true"></i>Within 24h</span>
       <span><i style="background:#dda842" aria-hidden="true"></i>24–48h</span>
@@ -151,71 +153,21 @@ th,td{border-bottom-color:#e5edf4}th{background:#edf4fa;color:#41617c}td{color:#
 </section>
 
 <section id="trends-tab" class="panel view-section" data-view="trends">
-  <h2>Weekly and Monthly Trends</h2>
-  <p class="muted">Each row groups requests by RequestedOn. Monthly and weekly percentages are weighted by the number of valid packed requests, not the average of daily percentages.</p>
-  <h3>Weekly performance</h3>
-  <div class="scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Week beginning</th>
-          <th>SO</th><th>TR</th><th>Requests</th>
-          <th>Packed</th>
-          <th>0–24h %</th>
-          <th>25–48h %</th>
-          <th>Over 48h %</th><th>Late % of packed</th>
-          <th>Missing FirstPackedOn</th><th>Packed / requested %</th>
-        </tr>
-      </thead>
-      <tbody id="weekly"></tbody>
-    </table>
-  </div>
-  <h3>Monthly performance</h3>
-  <div class="scroll"><table><thead><tr><th>Month</th><th>SO requests</th><th>TR requests</th><th>Total requests</th><th>Packed</th><th>0–24h %</th><th>25–48h %</th><th>Over 48h %</th><th>Missing FirstPackedOn</th><th>Packed / requested %</th></tr></thead><tbody id="monthly"></tbody></table></div>
+  <h2>Weekly and monthly performance</h2>
+  <p class="muted">See how packing changed over time. Requests are grouped by the date they were requested. Weeks start on Monday. Only the selected reporting dates are included, so a week or month may be incomplete. Select a column to open its results.</p>
+  <div id="weeklyView"></div><div id="monthlyView"></div>
 </section>
 
 <section id="carrier-tab" class="panel view-section" data-view="carriers">
-  <h2>Delays by carrier</h2>
-  <div class="scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Carrier</th>
-          <th>Requests</th>
-          <th>0–24h</th>
-          <th>0–24h % of packed</th>
-          <th>25–48h</th>
-          <th>25–48h % of packed</th>
-          <th>Over 48h</th>
-          <th>Over 48h % of packed</th>
-          <th>Late % of packed</th>
-        </tr>
-      </thead>
-      <tbody id="carriers"></tbody>
-    </table>
-  </div>
+  <h2>Shipping carriers</h2>
+  <p class="muted">Compare packing turnaround for requests assigned to each carrier. These times measure packing, not delivery speed. Select a carrier to see its results.</p>
+  <div id="carriersView"></div>
 </section>
 
 <section id="product-tab" class="panel view-section" data-view="products">
-  <h2>Delays by product line</h2>
-  <div class="scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Product line</th>
-          <th>Requests</th>
-          <th>0–24h</th>
-          <th>0–24h % of packed</th>
-          <th>25–48h</th>
-          <th>25–48h % of packed</th>
-          <th>Over 48h</th>
-          <th>Over 48h % of packed</th>
-          <th>Late % of packed</th>
-        </tr>
-      </thead>
-      <tbody id="products"></tbody>
-    </table>
-  </div>
+  <h2>Product lines</h2>
+  <p class="muted">Compare request volumes and packing turnaround across product lines. Select a product line to see its results.</p>
+  <div id="productsView"></div>
 </section>
 
 <section id="rollover-tab" class="panel view-section" data-view="rollover">
@@ -449,7 +401,7 @@ function metric(name,val){
   return `<div class="metric"><span class="muted">${name}</span><strong>${val}</strong></div>`;
 }
 function grouped(rows,key){
-  let g={};
+  let g=Object.create(null);
   for(let x of rows){
     let k=key(x);
     (g[k]??=[]).push(x);
@@ -492,39 +444,94 @@ function renderTurnaround(s){
     </div>
   </div>`;
 }
+function chartGroups(rows,key,labels){
+  return grouped(rows,key).map(([value,items])=>({...summary(items),...labels(value),so:items.filter(x=>x.type==='SO').length,tr:items.filter(x=>x.type==='TR').length}));
+}
 function renderDailyChart(rows){
-  const days=grouped(rows,x=>iso(new Date(x.requested))).map(([date,items])=>({date,...summary(items)}));
+  const days=chartGroups(rows,x=>iso(new Date(x.requested)),value=>{
+    const date=new Date(value+'T12:00:00');
+    return {label:date.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'}),shortLabel:date.toLocaleDateString('en-US',{weekday:'short'}),subLabel:date.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+  });
+  renderGroupedChart('dailyChart','dailyChartDetail',days,'day');
+}
+function renderGroupedView(id,title,groups,unit){
+  $(id+'View').innerHTML=`<div class="daily-chart-card">
+    <div class="daily-chart-heading"><h3>${title}</h3><small>Switch between counts and percentages. Select a column for details.</small></div>
+    <div class="daily-chart-legend" aria-label="Packing time colors">
+      <span><i style="background:#2d9b77" aria-hidden="true"></i>Packed within 24h</span>
+      <span><i style="background:#dda842" aria-hidden="true"></i>Packed in 24–48h</span>
+      <span><i style="background:#d47d66" aria-hidden="true"></i>Packed after 48h</span>
+      <span><i style="background:#91a4b7" aria-hidden="true"></i>No valid packed time</span>
+    </div>
+    <div class="daily-chart-layout"><div id="${id}Chart"></div><aside id="${id}Detail" class="daily-chart-detail" aria-label="Selected ${unit} details" aria-live="polite"></aside></div>
+  </div>`;
+  renderGroupedChart(id+'Chart',id+'Detail',groups,unit);
+}
+const packingChartModes=Object.create(null);
+function renderGroupedChart(chartId,detailId,days,unit){
+  const percentage=packingChartModes[chartId]==='percentage';
   if(!days.length){
-    $('dailyChart').innerHTML='<div class="daily-chart-empty">No requests for this period. Import a report or adjust the reporting dates.</div>';
-    $('dailyChartDetail').innerHTML='<h4>No daily results yet</h4><p class="daily-detail-caption">Import a report or adjust your dates to see day-by-day details.</p>';
+    $(chartId).innerHTML='<div class="daily-chart-empty">No requests for this period. Import a report or adjust the reporting dates.</div>';
+    $(detailId).innerHTML='<h4>No results yet</h4><p class="daily-detail-caption">Import a report or adjust your dates to see results.</p>';
     return;
   }
   const maximum=Math.max(...days.map(day=>day.total));
-  $('dailyChart').innerHTML=`<div class="daily-chart-scroll" tabindex="0" role="region" aria-label="Daily request counts, scroll horizontally for more days"><div class="daily-columns" style="width:max(100%, ${days.length*84}px)">
+  const reviewIndex=days.reduce((best,day,index)=>day.gt48>days[best].gt48?index:best,0);
+  const packedDays=days.map((day,index)=>({day,index})).filter(({day})=>day.packed>0);
+  const lowest=packedDays.reduce((best,item)=>!best||item.day.h24/item.day.packed<best.day.h24/best.day.packed?item:best,null);
+  const review=days[reviewIndex];
+  $(chartId).innerHTML=`<div class="packing-chart-controls" role="group" aria-label="Chart display">
+    <button type="button" class="secondary" data-mode="volume" aria-pressed="${!percentage}">Request counts</button>
+    <button type="button" class="secondary" data-mode="percentage" aria-pressed="${percentage}">Packing speed (%)</button>
+  </div>
+  <p class="packing-chart-explanation">${percentage?'Each full column represents 100% of packed requests. The number above it is the share packed within 24 hours. Gray requests are excluded.':'Taller columns mean more requests. Each color shows how long packing took. Gray means no valid packing time.'}</p>
+  <div class="packing-review-strip">
+    ${review.gt48?`<button type="button" class="packing-review" data-review="${reviewIndex}"><span>Most packed after 48h</span><strong>${escapeHtml(review.label)}</strong><small>${fmt(review.gt48)} requests · ${pct(review.gt48,review.packed)} of ${fmt(review.packed)} packed</small></button>`:'<div class="packing-review"><span>Packing after 48h</span><strong>No recorded cases</strong><small>Based on valid packing timestamps in this selection.</small></div>'}
+    ${lowest?`<button type="button" class="packing-review" data-review="${lowest.index}"><span>Lowest share packed within 24h</span><strong>${escapeHtml(lowest.day.label)}</strong><small>${pct(lowest.day.h24,lowest.day.packed)} · ${fmt(lowest.day.h24)} of ${fmt(lowest.day.packed)} packed</small></button>`:'<div class="packing-review"><span>24-hour performance</span><strong>No valid packing times yet</strong></div>'}
+  </div>
+  <div class="daily-chart-scroll" tabindex="0" role="region" aria-label="${percentage?'Packing speed percentages':'Request counts'}; scroll horizontally for more results"><div class="daily-columns" style="width:max(100%, ${days.length*84}px)">
     ${days.map((day,index)=>{
-      const date=new Date(day.date+'T12:00:00');
-      const label=date.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
-      return `<button type="button" class="daily-column" data-day="${index}" aria-pressed="false" aria-label="${label}: ${fmt(day.total)} requested, ${fmt(day.packed)} packed. Show details." title="${label}: ${fmt(day.total)} requests">
-        <strong>${fmt(day.total)}</strong>
-        <span class="daily-stack-area" aria-hidden="true"><span class="daily-stack" style="height:${220*day.total/maximum}px">
-          ${[[day.h24,'#2d9b77'],[day.b2548,'#dda842'],[day.gt48,'#d47d66'],[day.missing,'#91a4b7']].map(([count,color])=>`<span class="daily-segment" style="height:${100*count/day.total}%;background:${color}"></span>`).join('')}
+      const label=escapeHtml(day.label);
+      return `<button type="button" class="daily-column" data-day="${index}" aria-pressed="false" aria-label="${label}: ${fmt(day.total)} requested, ${fmt(day.packed)} packed${percentage?', '+pct(day.h24,day.packed)+' packed within 24 hours':''}. Show details." title="${label}: ${fmt(day.total)} requests">
+        <strong>${percentage?pct(day.h24,day.packed):fmt(day.total)}</strong>
+        <span class="daily-stack-area" aria-hidden="true"><span class="daily-stack" style="height:${percentage?(day.packed?220:0):220*day.total/maximum}px">
+          ${[[day.h24,'#2d9b77'],[day.b2548,'#dda842'],[day.gt48,'#d47d66'],...(!percentage?[[day.missing,'#91a4b7']]:[])].map(([count,color])=>`<span class="daily-segment" style="height:${(percentage?day.packed:day.total)?100*count/(percentage?day.packed:day.total):0}%;background:${color}"></span>`).join('')}
         </span></span>
-        <span class="daily-day">${date.toLocaleDateString('en-US',{weekday:'short'})}</span><span class="daily-date">${date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
+        <span class="daily-day daily-group-label">${escapeHtml(day.shortLabel)}</span><span class="daily-date">${escapeHtml(day.subLabel||'')}</span>
       </button>`;
     }).join('')}
   </div></div>`;
-  $('dailyChartDetail').innerHTML='<h4>Select a day</h4><p class="daily-detail-caption">Click or tap a column to see its full breakdown here.</p><p class="daily-detail-note">Column height shows total requests. Colors show packing turnaround; gray marks missing or invalid timestamps.</p>';
-  $('dailyChart').querySelectorAll('.daily-column').forEach(button=>{
+  $(detailId).innerHTML=`<h4>Select a ${unit}</h4><p class="daily-detail-caption">Click or tap a column to see its full breakdown here.</p><p class="daily-detail-note">Column height shows total requests. Colors show packing turnaround; gray marks missing or invalid timestamps.</p>`;
+  $(chartId).querySelectorAll('[data-mode]').forEach(button=>{
     button.onclick=()=>{
-      $('dailyChart').querySelectorAll('.daily-column').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+      const selected=$(chartId).querySelector('.daily-column[aria-pressed="true"]')?.dataset.day;
+      packingChartModes[chartId]=button.dataset.mode;
+      renderGroupedChart(chartId,detailId,days,unit);
+      if(selected!==undefined) $(chartId).querySelector(`.daily-column[data-day="${selected}"]`)?.click();
+      $(chartId).querySelector(`[data-mode="${button.dataset.mode}"]`).focus();
+    };
+  });
+  $(chartId).querySelectorAll('[data-review]').forEach(button=>{
+    button.onclick=()=>{
+      const column=$(chartId).querySelector(`.daily-column[data-day="${button.dataset.review}"]`);
+      column.click();column.focus();
+    };
+  });
+  $(chartId).querySelectorAll('.daily-column').forEach(button=>{
+    button.onclick=()=>{
+      $(chartId).querySelectorAll('.daily-column').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
       const day=days[Number(button.dataset.day)];
-      const date=new Date(day.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric'});
-      $('dailyChartDetail').innerHTML=`<h4>${date}</h4><p class="daily-detail-caption">Daily packing breakdown</p>
-        <div class="daily-detail-totals"><div><span>Requested</span><strong>${fmt(day.total)}</strong></div><div><span>Packed</span><strong>${fmt(day.packed)}</strong></div></div>
+      const date=escapeHtml(day.label);
+      $(detailId).innerHTML=`<h4>${date}</h4><p class="daily-detail-caption">Packing results</p>
+        <div class="daily-detail-totals"><div><span>Requested</span><strong>${fmt(day.total)}</strong></div><div><span>Packed with valid time</span><strong>${fmt(day.packed)}</strong></div></div>
         <dl class="daily-detail-list">
-          ${[['Within 24h',day.h24,'#2d9b77'],['24–48h',day.b2548,'#dda842'],['Over 48h',day.gt48,'#d47d66']].map(([label,count,color])=>`<div class="daily-detail-row"><dt><span class="daily-detail-dot" style="background:${color}" aria-hidden="true"></span>${label}</dt><dd>${fmt(count)}</dd><dd>${pct(count,day.packed)}</dd></div>`).join('')}
-          <div class="daily-detail-row"><dt><span class="daily-detail-dot" style="background:#91a4b7" aria-hidden="true"></span>Missing / invalid</dt><dd>${fmt(day.missing)}</dd><dd>—</dd></div>
-        </dl><p class="daily-detail-note">Turnaround percentages use ${fmt(day.packed)} packed requests with valid timestamps. Missing or invalid timestamps are excluded.</p>`;
+          ${[['Packed within 24h',day.h24,'#2d9b77'],['Packed in 24–48h',day.b2548,'#dda842'],['Packed after 48h',day.gt48,'#d47d66']].map(([label,count,color])=>`<div class="daily-detail-row"><dt><span class="daily-detail-dot" style="background:${color}" aria-hidden="true"></span>${label}</dt><dd>${fmt(count)}</dd><dd>${pct(count,day.packed)}</dd></div>`).join('')}
+          <div class="daily-detail-row"><dt><span class="daily-detail-dot" style="background:#91a4b7" aria-hidden="true"></span>No valid packed time</dt><dd>${fmt(day.missing)}</dd><dd>—</dd></div>
+        </dl>
+        <div class="daily-detail-row"><dt>SO / TR requests</dt><dd>${fmt(day.so)} / ${fmt(day.tr)}</dd></div>
+        <div class="daily-detail-row"><dt>Packed out of requested</dt><dd>${pct(day.packed,day.total)}</dd></div>
+        <div class="daily-detail-row"><dt>Packed after 24h</dt><dd>${pct(day.b2548+day.gt48,day.packed)}</dd></div>
+        <p class="daily-detail-note">Review requests packed after 24h or 48h to understand the causes before planning next week. Packing-speed percentages use ${fmt(day.packed)} requests with valid packing times, not all requests. Gray requests are excluded; a missing time does not explain why a request was not packed.</p>`;
     };
   });
 }
@@ -550,25 +557,11 @@ function render(){
   },8);
 
   renderDailyChart(rows);
-  table('weekly', grouped(rows,x=>week(x.requested)), ([date,rr])=>{
-    let z=summary(rr);
-    return `<tr>
-      <td>${date}</td><td>${fmt(rr.filter(x=>x.type==='SO').length)}</td><td>${fmt(rr.filter(x=>x.type==='TR').length)}</td><td>${fmt(z.total)}</td><td>${fmt(z.packed)}</td>
-      <td>${pct(z.h24,z.packed)}</td><td>${pct(z.b2548,z.packed)}</td>
-      <td>${pct(z.gt48,z.packed)}</td><td>${pct(z.b2548+z.gt48,z.packed)}</td><td>${fmt(z.missing)}</td><td>${pct(z.packed,z.total)}</td>
-    </tr>`;
-  },11);
-
-  table('monthly', grouped(rows,x=>iso(new Date(x.requested)).slice(0,7)),([month,rr])=>{
-    const z=summary(rr), so=rr.filter(x=>x.type==='SO').length, tr=rr.filter(x=>x.type==='TR').length;
-    return `<tr><td>${month}</td><td>${fmt(so)}</td><td>${fmt(tr)}</td><td>${fmt(z.total)}</td><td>${fmt(z.packed)}</td><td>${pct(z.h24,z.packed)}</td><td>${pct(z.b2548,z.packed)}</td><td>${pct(z.gt48,z.packed)}</td><td>${fmt(z.missing)}</td><td>${pct(z.packed,z.total)}</td></tr>`;
-  },10);
-
-  let byCarrier=grouped(rows,x=>x.carrier).map(([k,rr])=>[k,summary(rr)]).sort((a,b)=>b[1].gt48-a[1].gt48 || b[1].b2548-a[1].b2548);
-  table('carriers', byCarrier, ([k,z])=>`<tr><td>${k}</td><td>${fmt(z.total)}</td><td>${fmt(z.h24)}</td><td>${pct(z.h24,z.packed)}</td><td>${fmt(z.b2548)}</td><td>${pct(z.b2548,z.packed)}</td><td>${fmt(z.gt48)}</td><td>${pct(z.gt48,z.packed)}</td><td>${pct(z.b2548+z.gt48,z.packed)}</td></tr>`,9);
-
-  let byProduct=grouped(rows,x=>x.product).map(([k,rr])=>[k,summary(rr)]).sort((a,b)=>b[1].gt48-a[1].gt48 || b[1].b2548-a[1].b2548);
-  table('products', byProduct, ([k,z])=>`<tr><td>${k}</td><td>${fmt(z.total)}</td><td>${fmt(z.h24)}</td><td>${pct(z.h24,z.packed)}</td><td>${fmt(z.b2548)}</td><td>${pct(z.b2548,z.packed)}</td><td>${fmt(z.gt48)}</td><td>${pct(z.gt48,z.packed)}</td><td>${pct(z.b2548+z.gt48,z.packed)}</td></tr>`,9);
+  renderGroupedView('weekly','Week by week',chartGroups(rows,x=>week(x.requested),value=>({label:'Week starting '+new Date(value+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),shortLabel:'Week of',subLabel:value})), 'week');
+  renderGroupedView('monthly','Month by month',chartGroups(rows,x=>iso(new Date(x.requested)).slice(0,7),value=>({label:new Date(value+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'}),shortLabel:new Date(value+'-01T12:00:00').toLocaleDateString('en-US',{month:'short'}),subLabel:value.slice(0,4)})), 'month');
+  const compareDelays=(a,b)=>b.gt48-a.gt48 || b.b2548-a.b2548 || a.label.localeCompare(b.label);
+  renderGroupedView('carriers','Packing by carrier',chartGroups(rows,x=>x.carrier||'Unspecified',value=>({label:value,shortLabel:value})).sort(compareDelays), 'carrier');
+  renderGroupedView('products','Packing by product line',chartGroups(rows,x=>x.product||'Unspecified',value=>({label:value,shortLabel:value})).sort(compareDelays), 'product line');
 
   const active=Object.values(db.activity||{});
   const missing=rows.filter(r=>!r.packed);
